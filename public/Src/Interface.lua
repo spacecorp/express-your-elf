@@ -26,7 +26,7 @@ local function debugPrint(feature, message)
 end
 
 function ExpressYourElf_Reset_Tooltips()
-  local targetName = UnitName("target")
+  local targetName = UnitFullName("target")
   local scale = 0.7
 
   ExpressYourElf_DancingButton:SetScript("OnEnter", nil)

@@ -628,7 +628,7 @@ function ExpressYourElf.RandomPhrases.run()
   local playerHisHer = string.lower(ExpressYourElf.Helpers.GetHisHer(playerGender))
   local playerSirMam = string.lower(ExpressYourElf.Helpers.GetSirMam(playerGender))
 
-  if (UnitName("target") and UnitPlayerControlled("target")) then
+  if (UnitFullName("target") and UnitPlayerControlled("target")) then
     targetName, targetGender, targetClass, targetRace, targetLevel =
       ExpressYourElf.Helpers.GetTargetInformation()
     targetHisHer = string.lower(ExpressYourElf.Helpers.GetHisHer(targetGender))
@@ -637,7 +637,7 @@ function ExpressYourElf.RandomPhrases.run()
   end
 
   -- get random phrases
-  if (UnitName("target") and UnitPlayerControlled("target")) then
+  if (UnitFullName("target") and UnitPlayerControlled("target")) then
     local RandomPhraseTargeted =
       ExpressYourElf.RandomPhrases.GetRandomMessageToTarget(
         playerName,

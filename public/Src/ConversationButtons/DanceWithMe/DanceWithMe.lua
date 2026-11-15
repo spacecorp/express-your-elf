@@ -607,7 +607,7 @@ function ExpressYourElf.DanceWithMe.run()
   playerHeShe = string.lower(ExpressYourElf.Helpers.GetHeShe(playerGender))
   playerHimHer = string.lower(ExpressYourElf.Helpers.GetHimHer(playerGender))
 
-  if (UnitName("target") and UnitPlayerControlled("target")) then
+  if (UnitFullName("target") and UnitPlayerControlled("target")) then
     targetName, targetGender, targetClass, targetRace, targetLevel =
       ExpressYourElf.Helpers.GetTargetInformation()
     targetHisHer = string.lower(ExpressYourElf.Helpers.GetHisHer(targetGender))
@@ -619,7 +619,7 @@ function ExpressYourElf.DanceWithMe.run()
   end
 
   -- get random phrases
-  if (UnitName("target") and UnitPlayerControlled("target")) then
+  if (UnitFullName("target") and UnitPlayerControlled("target")) then
     local lyrics =
       getTargetMessage(
         playerName,

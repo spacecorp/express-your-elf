@@ -86,7 +86,8 @@ end
 local function getCharacterinfo(target)
   local genderTable = { "neuter or unknown", "male", "female" }
   local playerClass, englishClass, classIndex = UnitClass(target)
-  local name, upName, level = UnitName(target)
+  local _, upName, level = UnitName(target)
+  local name, serverName = UnitFullName(target)
   local unitLevel = UnitLevel(target)
   local gender = genderTable[UnitSex(target)]
   local race, raceEn = UnitRace(target)
@@ -95,7 +96,7 @@ local function getCharacterinfo(target)
 end
 
 function ExpressYourElf.Helpers.GetTargetInformation()
-  if UnitName("target") then
+  if UnitFullName("target") then
     return getCharacterinfo("target")
   end
 
@@ -104,8 +105,9 @@ end
 
 function ExpressYourElf.Helpers.GetTargetInformationByUID(uid)
   local genderTable = { "neutral or unknown", "male", "female" }
-  local targetClass, engClass, targetRace, engRace, gender, targetName, server =
-    GetPlayerInfoByGUID(uid)
+  local targetClass, engClass, targetRace, engRace, gender, _, server = GetPlayerInfoByGUID(uid)
+  local targetName, serverName = UnitFullName(uid)
+
   local targetGender = genderTable[UnitSex(uid)]
 
   return targetName, targetGender, targetClass, targetRace
