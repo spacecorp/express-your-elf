@@ -153,6 +153,7 @@
                 
                 local function eventHandler(self, event, arg1, ...)
                     if event == "ADDON_LOADED" and arg1 == "ExpressYourElf" then
+                        ExpressYourElf_SetupMoving()
 
                         if (ExpressYourElfVars.isShown == true) then
                             ExpressYourElf_Frame:Show()
@@ -213,6 +214,15 @@
                 end
                 ExpressYourElf_Frame:SetScript("OnEvent", eventHandler);
             </OnLoad>
+            <!-- moving: only in Edit Mode (or anytime on versions without Edit Mode), see Interface.lua -->
+            <OnDragStart>
+                if (ExpressYourElf_CanMove()) then
+                    self:StartMoving()
+                end
+            </OnDragStart>
+            <OnDragStop>
+                self:StopMovingOrSizing()
+            </OnDragStop>
         </Scripts>
         <Size>
             <AbsDimension x="228" y="125" />
@@ -305,17 +315,9 @@
                             </Offset>
                         </Anchor>
                     </Anchors>
-                    <Scripts>
-                        <OnMouseDown>
-                            ExpressYourElf_Frame:StartMoving()
-                        </OnMouseDown>
-                        <OnMouseUp>
-                            ExpressYourElf_Frame:StopMovingOrSizing()
-                        </OnMouseUp>
-                    </Scripts>
                 </Texture>
 
-                <FontString inherits="GameFontNormal" text="Express your Elf">
+                <FontString name="ExpressYourElf_Frame_Title" inherits="GameFontNormal" text="Express your Elf">
                     <Anchors>
                         <Anchor point="TOP" relativeTo="ExpressYourElf_Frame_Header">
                             <Offset>
@@ -328,35 +330,29 @@
         </Layers>
         <Frames>
 
-            <Frame
-        name="$parentButtonClose"
-        inherits="FloatingBorderedFrame"
-        parentKey="buttonFrame"
-        alpha="0.2"
-      >
-                <Size x="29" y="0" />
-                <Frames>
-                    <Button name="$parentMinimizeButton" parentKey="minimizeButton">
-                        <Size x="32" y="32" />
-                        <Anchors>
-                            <Anchor point="TOP" x="0" y="4" />
-                        </Anchors>
-                        <Scripts>
-                            <OnClick>
-                                local chatFrame = self:GetParent():GetParent();
-                                ExpressYourElf_ToggleMinimize();
-
-                            </OnClick>
-                        </Scripts>
-                        <NormalTexture file="Interface\ChatFrame\UI-ChatIcon-Minimize-Up" />
-                        <PushedTexture file="Interface\ChatFrame\UI-ChatIcon-Minimize-Down" />
-                        <HighlightTexture
-              file="Interface\Buttons\UI-Common-MouseHilight"
-              alphaMode="ADD"
-            />
-                    </Button>
-                </Frames>
-            </Frame>
+            <!-- collapse/expand: hides the buttons so only the title bar is left -->
+            <Button name="ExpressYourElf_Frame_CollapseButton">
+                <Size x="16" y="16" />
+                <Anchors>
+                    <Anchor point="LEFT" relativeTo="ExpressYourElf_Frame_Title" relativePoint="RIGHT" x="6" y="0" />
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        ExpressYourElf_ToggleMinimize()
+                    </OnClick>
+                    <OnEnter>
+                        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+                        GameTooltip:SetText(ExpressYourElfVars and ExpressYourElfVars.minimized and "Expand" or "Collapse")
+                        GameTooltip:Show()
+                    </OnEnter>
+                    <OnLeave>
+                        GameTooltip:Hide()
+                    </OnLeave>
+                </Scripts>
+                <NormalTexture file="Interface\Buttons\UI-MinusButton-Up" />
+                <PushedTexture file="Interface\Buttons\UI-MinusButton-Down" />
+                <HighlightTexture file="Interface\Buttons\UI-PlusButton-Hilight" alphaMode="ADD" />
+            </Button>
         </Frames>
     </Frame>
 </Ui>

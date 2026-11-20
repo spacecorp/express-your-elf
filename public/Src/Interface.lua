@@ -171,12 +171,12 @@ end
 
 function ExpressYourElf_ShowButtons()
   ExpressYourElf_Frame:Show()
-  ExpressYourElfVars.IsShown = true
+  ExpressYourElfVars.isShown = true -- same key as read on load ("IsShown" was never read back)
 end
 
 function ExpressYourElf_HideButtons()
   ExpressYourElf_Frame:Hide()
-  ExpressYourElfVars.IsShown = false
+  ExpressYourElfVars.isShown = false
 end
 
 function ExpressYourElf_AllowMatureContent()
@@ -218,34 +218,130 @@ function ExpressYourElf_DoNotConsentToFlirt()
   ExpressYourElf_FlirtButton:SetAlpha(0.3)
 end
 
+local function allConversationButtons()
+  return {
+    ExpressYourElf_DancingButton, ExpressYourElf_RandomButton, ExpressYourElf_RudeButton,
+    ExpressYourElf_ComplimentButton, ExpressYourElf_GiftButton, ExpressYourElf_FlirtButton,
+    ExpressYourElf_SeduceButton, ExpressYourElf_JokeButton,
+  }
+end
+
+-- Collapse (only the title bar stays) or expand the conversation buttons.
+-- option: true = collapse, false = expand, nil = toggle.
 function ExpressYourElf_ToggleMinimize(option)
-  if (option == false) then
-    ExpressYourElfVars.minimized = true
+  local collapse = option
+  if (collapse == nil) then
+    collapse = not ExpressYourElfVars.minimized
   end
+  ExpressYourElfVars.minimized = collapse
 
-  if (option == true) then
-    ExpressYourElfVars.minimized = false
+  for _, button in ipairs(allConversationButtons()) do
+    if (collapse) then
+      button:Hide()
+    else
+      button:Show()
+    end
   end
+  ExpressYourElf_Frame:SetHeight(collapse and 1 or 125)
 
-  if ExpressYourElfVars.minimized then
-    ExpressYourElfVars.minimized = false
-    ExpressYourElf_Frame:SetHeight(125)
-    ExpressYourElf_DancingButton:Show()
-    ExpressYourElf_RandomButton:Show()
-    ExpressYourElf_FlirtButton:Show()
-    ExpressYourElf_SeduceButton:Show()
-    ExpressYourElf_GiftButton:Show()
-    ExpressYourElf_RudeButton:Show()
+  -- title bar button: "+" expands, "-" collapses
+  local collapseButton = ExpressYourElf_Frame_CollapseButton
+  if (collapseButton) then
+    local icon = collapse and "Plus" or "Minus"
+    collapseButton:SetNormalTexture("Interface\\Buttons\\UI-" .. icon .. "Button-Up")
+    collapseButton:SetPushedTexture("Interface\\Buttons\\UI-" .. icon .. "Button-Down")
+    if (GameTooltip:IsOwned(collapseButton)) then
+      GameTooltip:SetText(collapse and "Expand" or "Collapse")
+    end
+  end
+end
+
+-- Moving ----------------------------------------------------------------------------------------
+-- The buttons are moved with Blizzard's Edit Mode (Esc > Edit Mode). WoW versions without Edit Mode
+-- keep moving by dragging the title bar. WoW remembers the position of a moved frame by itself.
+
+local hasEditMode = EventRegistry ~= nil and EventRegistry.RegisterCallback ~= nil and EditModeManagerFrame ~= nil
+local isEditing = false
+local dragHandle
+
+function ExpressYourElf_CanMove()
+  return isEditing or not hasEditMode
+end
+
+local function placeDragHandle()
+  local frame = ExpressYourElf_Frame
+  dragHandle:ClearAllPoints()
+
+  if (isEditing) then
+    -- the whole bar, including the title above it
+    dragHandle:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, 22)
+    dragHandle:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", 0, 0)
+    dragHandle.highlight:Show()
+    dragHandle:Show()
+  elseif (not hasEditMode) then
+    -- versions without Edit Mode: drag the title bar
+    dragHandle:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, 22)
+    dragHandle:SetPoint("BOTTOMRIGHT", frame, "TOPRIGHT", 0, -2)
+    dragHandle.highlight:Hide()
+    dragHandle:Show()
   else
-    ExpressYourElfVars.minimized = true
-    ExpressYourElf_DancingButton:Hide()
-    ExpressYourElf_RandomButton:Hide()
-    ExpressYourElf_FlirtButton:Hide()
-    ExpressYourElf_SeduceButton:Hide()
-    ExpressYourElf_GiftButton:Hide()
-    ExpressYourElf_RudeButton:Hide()
-    ExpressYourElf_Frame:SetHeight(1)
+    dragHandle:Hide()
   end
+end
+
+local function setEditing(editing)
+  local frame = ExpressYourElf_Frame
+  isEditing = editing
+
+  if (editing) then
+    -- show the bar while editing, even when it is hidden with /eyelf hide
+    frame.hiddenBeforeEditMode = not frame:IsShown()
+    frame:Show()
+  else
+    frame:StopMovingOrSizing()
+    if (frame.hiddenBeforeEditMode) then
+      frame:Hide()
+    end
+    frame.hiddenBeforeEditMode = nil
+  end
+
+  placeDragHandle()
+end
+
+-- called once on ADDON_LOADED (see ConversationButtons/Interface.xml)
+function ExpressYourElf_SetupMoving()
+  if (dragHandle) then
+    return
+  end
+
+  local frame = ExpressYourElf_Frame
+  dragHandle = CreateFrame("Frame", "ExpressYourElf_Frame_DragHandle", frame)
+  dragHandle:SetFrameLevel(frame:GetFrameLevel() + 20)
+  dragHandle:EnableMouse(true)
+  dragHandle:RegisterForDrag("LeftButton")
+  dragHandle:SetScript("OnDragStart", function()
+    if (ExpressYourElf_CanMove()) then
+      frame:StartMoving()
+    end
+  end)
+  dragHandle:SetScript("OnDragStop", function()
+    frame:StopMovingOrSizing()
+  end)
+
+  -- Edit Mode look: translucent blue selection
+  dragHandle.highlight = dragHandle:CreateTexture(nil, "OVERLAY")
+  dragHandle.highlight:SetAllPoints()
+  dragHandle.highlight:SetColorTexture(0.25, 0.55, 1, 0.35)
+
+  -- keep the collapse button clickable above the drag handle
+  ExpressYourElf_Frame_CollapseButton:SetFrameLevel(dragHandle:GetFrameLevel() + 5)
+
+  if (hasEditMode) then
+    EventRegistry:RegisterCallback("EditMode.Enter", function() setEditing(true) end, ExpressYourElf)
+    EventRegistry:RegisterCallback("EditMode.Exit", function() setEditing(false) end, ExpressYourElf)
+  end
+
+  placeDragHandle()
 end
 
 -- function ExpressYourElf_BombsGoBurrOn()
