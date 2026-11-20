@@ -199,7 +199,7 @@ playerName,
     )
   end
 
-  if (playerClass == Race.Dracthyr) then
+  if (playerRace == Race.Dracthyr) then
     table.insert(
       jokeLines,
       "I'm a Dracthyr. I can breathe fire. I can fly. I can do a lot of things. But I can't dance."

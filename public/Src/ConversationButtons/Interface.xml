@@ -162,7 +162,7 @@
                 
                         ExpressYourElf_Frame:SetScale(ExpressYourElfVars.interfaceScale);
                     end
-                    if event == "PLAYER_TARGET_CHANGED" and UnitName("target") and UnitPlayerControlled("target") then
+                    if event == "PLAYER_TARGET_CHANGED" and UnitFullName("target") and UnitPlayerControlled("target") then
                         ExpressYourElf_GiftButton:Enable()
                         ExpressYourElf_GiftButton:SetAlpha(1)
                         ExpressYourElf_RudeButton:Enable()
@@ -185,7 +185,7 @@
                              ExpressYourElf_SeduceButton:Disable()
                             ExpressYourElf_SeduceButton:SetAlpha(0.3)
                         end
-                    elseif event == "PLAYER_TARGET_CHANGED" and UnitName("target") and UnitPlayerControlled("target") == false then
+                    elseif event == "PLAYER_TARGET_CHANGED" and UnitFullName("target") and UnitPlayerControlled("target") == false then
                         ExpressYourElf_GiftButton:Enable()
                         ExpressYourElf_GiftButton:SetAlpha(1)
                         ExpressYourElf_FlirtButton:Disable()

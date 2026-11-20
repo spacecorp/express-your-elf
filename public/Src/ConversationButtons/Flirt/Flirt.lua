@@ -448,7 +448,7 @@ playerName,
       table.insert(flirtLines, "Normally, I only ride on epic mounts... But, let's talk.")
     end
 
-    if (playerRace == Class.DemonHunter and playerRace == Race.BloodElf and playerGender == "female") then
+    if (playerClass == Class.DemonHunter and playerRace == Race.BloodElf and playerGender == "female") then
       table.insert(
         flirtLines,
         "Are you sure you're not part-demon? I find myself wanting to stalk you."
@@ -694,7 +694,7 @@ function ExpressYourElf.Flirt.run()
     return
   end
 
-  if (UnitName("target") and UnitPlayerControlled("target")) then
+  if (UnitFullName("target") and UnitPlayerControlled("target")) then
     local playerName, playerGender, playerClass, playerRace, playerLevel =
       ExpressYourElf.Helpers.GetPlayerInformation()
     local targetName, targetGender, targetClass, targetRace, targetLevel =

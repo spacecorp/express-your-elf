@@ -42,6 +42,7 @@ playerName,
   local playerSex = "girl"
   local oppositeSex = "guys"
   local oppositeBfGf = "boyfriend"
+  local isForever = (WOW_PROJECT_ID == (WOW_PROJECT_CAMELOT or 18))
 
   if (playerGender == "male") then
     playerSex = "guy"
@@ -60,7 +61,7 @@ playerName,
       "Are we ${playerRace}, or are we dancers.",
       "Beats so big I'm stepping on ${playerRace}.",
       "TELL ME WHY!?, I don't like ${randomWorld}... TELL ME WHY!? I don't like ${randomWorld}",
-      "My ${race} hips don't lie.",
+      "My ${playerRace} hips don't lie.",
       "Is this the real life? Is this just fantasy?",
       "It's murder on the raid floor. But you'd better not steal the moves. Yhea Yhea! Boss' gonna burn this dungeon down right now!",
       "Like a ${playerRace}, raiding for the very first time!",
@@ -72,7 +73,7 @@ playerName,
       "Ob-La-Di, Ob-La-Da",
       "Prance Forward",
       "I can't stop damaging you. Time passes quickly and your flesh is few. I won't stop till I'm through hurting you",
-      "Oh, baby, when you talk like that, you make a ${race} go mad.",
+      "Oh, baby, when you talk like that, you make a ${playerRace} go mad.",
       "Shashay Left",
       "Boogie Down",
       "Shimmy Right",
@@ -87,6 +88,10 @@ playerName,
       "Love me love me, say that you love me. Fool me fool me, go on and fool me.",
       "Burning down ${zoneName}, my ${zoneName}!",
     }
+
+  if (isForever) then 
+      table.insert(danceLines, "FOREVER young, I am going to be, FOREVER young.")
+  end
 
   -- Tank classes
   if (playerClass == Class.Warrior or playerClass == Class.Paladin or playerClass == Class.DeathKnight or playerClass == Class.Monk) then
@@ -334,7 +339,7 @@ playerName,
     )
 
     -- all horde rces
-    if (playerRace == Race.Tauren or playerRace == Race.HighmountainTauren or playerRace == Race.Scourge or playerRace == Race.Undead or playerRace == Race.Troll or playerRace == Race.ZandalariTroll or playerRace == Race.Orc or playerRace == "Mag'har" or playerRace == Race.Goblin or playerRace == Race.BloodElf or playerRace == Race.Nightborne or playerRace == Race.Vulpera) then
+    if (playerRace == Race.Tauren or playerRace == Race.HighmountainTauren or playerRace == Race.Scourge or playerRace == Race.Undead or playerRace == Race.Troll or playerRace == Race.ZandalariTroll or playerRace == Race.Orc or playerRace == Race.MagharOrc or playerRace == Race.Goblin or playerRace == Race.BloodElf or playerRace == Race.Nightborne or playerRace == Race.Vulpera) then
       -- all horde female leaders
       table.insert(danceLines, "A little bit of Sylvanas in my life")
       table.insert(danceLines, "A little bit of Geya'rah by my side")
@@ -401,7 +406,7 @@ playerName,
     )
 
     -- all horde rces
-    if (playerRace == Race.Tauren or playerRace == Race.HighmountainTauren or playerRace == Race.Scourge or playerRace == Race.Undead or playerRace == Race.Troll or playerRace == Race.ZandalariTroll or playerRace == Race.Orc or playerRace == "Mag'har" or playerRace == Race.Goblin or playerRace == Race.BloodElf or playerRace == Race.Nightborne or playerRace == Race.Vulpera) then
+    if (playerRace == Race.Tauren or playerRace == Race.HighmountainTauren or playerRace == Race.Scourge or playerRace == Race.Undead or playerRace == Race.Troll or playerRace == Race.ZandalariTroll or playerRace == Race.Orc or playerRace == Race.MagharOrc or playerRace == Race.Goblin or playerRace == Race.BloodElf or playerRace == Race.Nightborne or playerRace == Race.Vulpera) then
       -- all horde male leaders
       table.insert(danceLines, "A little bit of Theron in my life")
       table.insert(danceLines, "A little bit of Vol'Jin by my side")
@@ -607,7 +612,7 @@ function ExpressYourElf.DanceWithMe.run()
   playerHeShe = string.lower(ExpressYourElf.Helpers.GetHeShe(playerGender))
   playerHimHer = string.lower(ExpressYourElf.Helpers.GetHimHer(playerGender))
 
-  if (UnitName("target") and UnitPlayerControlled("target")) then
+  if (UnitFullName("target") and UnitPlayerControlled("target")) then
     targetName, targetGender, targetClass, targetRace, targetLevel =
       ExpressYourElf.Helpers.GetTargetInformation()
     targetHisHer = string.lower(ExpressYourElf.Helpers.GetHisHer(targetGender))
@@ -619,7 +624,7 @@ function ExpressYourElf.DanceWithMe.run()
   end
 
   -- get random phrases
-  if (UnitName("target") and UnitPlayerControlled("target")) then
+  if (UnitFullName("target") and UnitPlayerControlled("target")) then
     local lyrics =
       getTargetMessage(
         playerName,

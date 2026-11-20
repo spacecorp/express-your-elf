@@ -62,6 +62,7 @@ playerName,
     "I’ve never seen the inside of my own mouth because it scares me to death.",
     "If it were for the kobolds, we’d all be watching TV by candlelight.",
     "My eye socket is warm.",
+    "I'm doing my part!",
     "I was told I have a beautiful brain while doing a paid MRI study.",
     "Have you ever tried sleeping in water?",
     "I'm going to get my toe nail pierced this weekend, you?",
@@ -294,7 +295,7 @@ playerName,
     table.insert(listOfPhrases, "Drink fel, stay fit, die anyway.")
   end
 
-  if (playerClass == Class.DeathKnight or playerClass == Race.Scourge or playerClass == Race.Undead) then
+  if (playerClass == Class.DeathKnight or playerRace == Race.Scourge or playerRace == Race.Undead) then
     table.insert(listOfPhrases, "It's true, a windmill killed me.")
     table.insert(
       listOfPhrases,
@@ -321,7 +322,7 @@ playerName,
     table.insert(listOfPhrases, "But Hunter, where's Hunter? Where is Hunter, by the way?")
   end
 
-  if (playerRace == Class.Priest) then
+  if (playerClass == Class.Priest) then
     table.insert(
       listOfPhrases,
       "I have so much to do that I shall spend the first three hours casting Prayer of Mending."
@@ -522,7 +523,8 @@ playerName,
   -- New Year's Eve
   if (d.month == 12 and d.day == 31) then  end
 
-  if (targetName == "Yamisuzu" or targetName == "Alhena") then
+  local targetFirstName = ExpressYourElf.Helpers.GetFirstName(targetName)
+  if (targetFirstName == "Yamisuzu" or targetFirstName == "Alhena") then
     table.insert(listOfPhrases, "ally ally ally! OI OI OI!")
   end
 
@@ -628,7 +630,7 @@ function ExpressYourElf.RandomPhrases.run()
   local playerHisHer = string.lower(ExpressYourElf.Helpers.GetHisHer(playerGender))
   local playerSirMam = string.lower(ExpressYourElf.Helpers.GetSirMam(playerGender))
 
-  if (UnitName("target") and UnitPlayerControlled("target")) then
+  if (UnitFullName("target") and UnitPlayerControlled("target")) then
     targetName, targetGender, targetClass, targetRace, targetLevel =
       ExpressYourElf.Helpers.GetTargetInformation()
     targetHisHer = string.lower(ExpressYourElf.Helpers.GetHisHer(targetGender))
@@ -637,7 +639,7 @@ function ExpressYourElf.RandomPhrases.run()
   end
 
   -- get random phrases
-  if (UnitName("target") and UnitPlayerControlled("target")) then
+  if (UnitFullName("target") and UnitPlayerControlled("target")) then
     local RandomPhraseTargeted =
       ExpressYourElf.RandomPhrases.GetRandomMessageToTarget(
         playerName,

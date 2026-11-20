@@ -75,7 +75,7 @@ playerName,
       "gives a hand-knit brain beanie.",
     }
 
-  if (playerClass == Race.Goblin) then
+  if (playerRace == Race.Goblin) then
     table.insert(listOfGifts, "gives a set of [Goblin Rocket Boots] to ${targetName}.")
     table.insert(listOfGifts, "gives a [Goblin Rocket Helmet] to ${targetName}.")
     table.insert(listOfGifts, "gives a [Goblin Rocket Launcher] to ${targetName}.")
@@ -107,7 +107,7 @@ playerName,
     table.insert(listOfGifts, "hands over a set of neck ties for ${targetName}'s pets.")
   end
 
-  if (playerRace == Class.DeathKnight) then
+  if (playerClass == Class.DeathKnight) then
     table.insert(listOfGifts, "hands over ${targetName} a carved steak of decaying flesh, ew!")
   end
 
@@ -347,7 +347,7 @@ playerName,
 end
 
 function ExpressYourElf.GivePresent.run()
-  if UnitName("target") then
+  if UnitFullName("target") then
     local playerName, playerGender, playerClass, playerRace, playerLevel =
       ExpressYourElf.Helpers.GetPlayerInformation()
     local targetName, targetGender, targetClass, targetRace, targetLevel =

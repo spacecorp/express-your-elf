@@ -231,7 +231,9 @@ playerName,
     table.insert(rudeLines, "Ew. ${targetName}'s ears are so big, it is full of earwax.")
   end
 
-  if (targetName == "Monnah" or targetName == "Sueyen" or targetName == "Subzie" or playerName == "Monnah" or playerName == "Darkrider" or playerName == "Suyen" or playerName == "Suekiyaki" or targetName == "Subzie" or targetName == "Lightzie" or targetName == "Monnah") then
+  local targetFirstName = ExpressYourElf.Helpers.GetFirstName(targetName)
+  local playerFirstName = ExpressYourElf.Helpers.GetFirstName(playerName)
+  if (targetFirstName == "Monnah" or targetFirstName == "Sueyen" or targetFirstName == "Subzie" or playerFirstName == "Monnah" or playerFirstName == "Darkrider" or playerFirstName == "Suyen" or playerFirstName == "Suekiyaki" or targetFirstName == "Subzie" or targetFirstName == "Lightzie" or targetFirstName == "Monnah") then
     table.insert(rudeLines, "${targetName}, Pannekoek!")
   end
 
@@ -272,7 +274,7 @@ playerName,
     )
   end
 
-  if (targetClass == Class.Warlock or targetClass == Race.VoidElf) then
+  if (targetClass == Class.Warlock or targetRace == Race.VoidElf) then
     table.insert(
       rudeLines,
       "The void never drained the sanity on ${targetName}, because there was none to begin with."
@@ -398,7 +400,7 @@ playerName,
 end
 
 function ExpressYourElf.IAmRude.run()
-  if (UnitName("target") and UnitPlayerControlled("target")) then
+  if (UnitFullName("target") and UnitPlayerControlled("target")) then
     local playerName, playerGender, playerClass, playerRace, playerLevel =
       ExpressYourElf.Helpers.GetPlayerInformation()
     local targetName, targetGender, targetClass, targetRace, targetLevel =

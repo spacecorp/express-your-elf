@@ -240,7 +240,7 @@ playerName,
     table.insert(seduceLines, "Have you ever thought of the idea I would be your succubus?")
   end
 
-  if (targetRace == Class.DemonHunter and playerGender == "male") and targetGender == "female" then
+  if (targetClass == Class.DemonHunter and playerGender == "male") and targetGender == "female" then
     table.insert(
       seduceLines,
       "Have you ever thought of the idea I would be fine you being my succubus?"
@@ -495,7 +495,7 @@ playerName,
 end
 
 function ExpressYourElf.Seduce.run()
-  if (UnitName("target") and UnitPlayerControlled("target")) then
+  if (UnitFullName("target") and UnitPlayerControlled("target")) then
     local playerName, playerGender, playerClass, playerRace, playerLevel =
       ExpressYourElf.Helpers.GetPlayerInformation()
     local targetName, targetGender, targetClass, targetRace, targetLevel =

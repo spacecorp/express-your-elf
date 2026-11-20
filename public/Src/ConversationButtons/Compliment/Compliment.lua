@@ -202,7 +202,7 @@ playerName,
     table.insert(ComplimentLines, "You have really pretty eyes, like a husky.")
   end
 
-  if (targetRace == Race.Scourge or targetRace == Race.Undead or targetRace == Class.DeathKnight) then
+  if (targetRace == Race.Scourge or targetRace == Race.Undead or targetClass == Class.DeathKnight) then
     table.insert(ComplimentLines, "You're looking very alive today!")
   end
 
@@ -336,7 +336,7 @@ playerName,
   if (ExpressYourElfVars.allowMatureContent and ExpressYourElfVars.bringBackRemoved) then
     if (playerRace == Race.BloodElf and playerGender == "female") then  end
 
-    if (playerRace == Class.DemonHunter and playerRace == Race.BloodElf and playerGender == "female") then  end
+    if (playerClass == Class.DemonHunter and playerRace == Race.BloodElf and playerGender == "female") then  end
 
     if (playerRace == Race.Goblin and playerGender == "female") then  end
 
@@ -430,7 +430,7 @@ playerName,
 end
 
 function ExpressYourElf.Compliment.run()
-  if (UnitName("target") and UnitPlayerControlled("target")) then
+  if (UnitFullName("target") and UnitPlayerControlled("target")) then
     local playerName, playerGender, playerClass, playerRace, playerLevel =
       ExpressYourElf.Helpers.GetPlayerInformation()
     local targetName, targetGender, targetClass, targetRace, targetLevel =
